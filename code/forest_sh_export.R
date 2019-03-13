@@ -41,7 +41,7 @@ forest_to_sh("Wayne National Forest", "data/wayne_nf")
 
 forest_to_sh("Shawnee National Forest", "data/shawnee_nf")
 
-forest_to_sh("Hoosier National Forest", "data/shawnee_nf")
+forest_to_sh("Hoosier National Forest", "data/hoosier_nf")
 
 #----------------------------------------------------------------------------
 

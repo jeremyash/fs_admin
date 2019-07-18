@@ -36,16 +36,36 @@ regions <- readOGR("gis/region")
 regions <- subset(regions, REGION %in% c("08", "09"))
 regions <- spTransform(regions, crs_new)
 
+#wilderness 
+wild <- readOGR("gis/Wilderness")
+wild <- subset(wild, WILDERNE_1 %in% c("Rainbow Lake Wilderness", "Bradwell Bay Wilderness"))
+wild <- spTransform(wild, crs_new)
+
+
+
+
 #############################################################################
-## intersect class 1 and regions 8/9
+## intersect class 1, wild and regions 8/9
 #############################################################################
+
 
 c1_r8_9 <- raster::intersect(c1, regions)
 c1_r8_9@data <- droplevels(c1_r8_9@data)
 c1_r8_9@data <- c1_r8_9@data %>% 
   dplyr::select(NAME, STATE) %>% 
   mutate(NAME = as.factor(paste(STATE, " - ", NAME))) %>% 
+  arrange(NAME) %>% 
+  dplyr::select(-STATE)
+
+wild@data <- wild@data %>% 
+  bind_cols(., NAME = c("WI - Rainbow Lake Wilderness", "FL - Bradwell Bay Wilderness")) %>% 
+  mutate(NAME = as.factor(NAME)) %>% 
+  dplyr::select(NAME)
+
+c1_r8_9 <- rbind(c1_r8_9, wild)
+c1_r8_9@data <- c1_r8_9@data %>% 
   arrange(NAME)
+
 
 
 #############################################################################
